@@ -114,6 +114,7 @@ team2Players.forEach((player) => {
 
 team1ScoreBtns.forEach((button) => {
   button.addEventListener("click", (_) => {
+    console.log("testas");
     adjustTeamScore(1, parseInt(button.value));
   });
 });
