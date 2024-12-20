@@ -1,0 +1,11 @@
+.teamsContainer {
+  display: flex;
+  justify-content: space-evenly;
+  .playerContainer {
+    display: flex;
+    margin: 20px;
+    div {
+      margin: 20px;
+    }
+  }
+}
