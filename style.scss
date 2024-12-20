@@ -120,19 +120,28 @@ body {
     .logButtonContainer {
       display: flex;
       column-gap: 20px;
+      margin-bottom: 20px;
     }
-    h4 {
-      background-color: #333; // Dark background for scoreboard
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 24px;
-      font-weight: bold;
-      text-align: center;
-      width: 45%;
-    }
-    .dataScore {
+    .whiteBckg {
       background-color: white;
-      width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      h4 {
+        background-color: #333; // Dark background for scoreboard
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        width: 45%;
+        margin: 0;
+        margin-top: 5px;
+      }
+      .dataScore {
+        background-color: white;
+        width: 500px;
+      }
     }
   }
 }
