@@ -1,5 +1,20 @@
-const team1Players = document.querySelectorAll("[data-team1-player-container]");
-const team2Players = document.querySelectorAll("[data-team2-player-container]");
+const teamFouls = {
+  Komandos1žaidėjas1: 0,
+  Komandos1žaidėjas2: 0,
+  Komandos1žaidėjas3: 0,
+  Komandos2žaidėjas1: 0,
+  Komandos2žaidėjas2: 0,
+  Komandos2žaidėjas3: 0,
+};
+
+const teamScore = {
+  komanda1: 0,
+  komanda2: 0,
+};
+
+let eventLog = [];
+
+const teamPlayers = document.querySelectorAll("[data-team-player-container]");
 
 const team1ScoreBtns = document.querySelectorAll(
   "[data-points1-container] button"
@@ -20,6 +35,13 @@ const fouls = document.querySelectorAll("[data-player-fouls]");
 let logContainer = document.querySelector("[data-score]");
 let currentQuarter;
 
+function populateLog(message) {
+  eventLog.push(message);
+  eventLog.forEach((event) => {
+    logContainer.appendChild(event);
+  });
+}
+
 function getTime() {
   const now = new Date(); // Create a new Date object for the current time
   const hours = now.getHours(); // Get the current hour (0-23)
@@ -36,10 +58,10 @@ function assignFoul(player, foulHtml) {
   teamFouls[playerKey]++;
   foulHtml.innerText = teamFouls[playerKey];
 
-  let p = document.createElement("p");
-  p.innerText = `${player} gavo pražangą ${getTime()}`;
+  let message = document.createElement("p");
+  message.innerText = `${player} gavo pražangą ${getTime()}`;
 
-  logContainer.appendChild(p);
+  populateLog(message);
 }
 
 function adjustTeamScore(team, value) {
@@ -48,27 +70,13 @@ function adjustTeamScore(team, value) {
     ? (team1Score.innerText = teamScore[`komanda${team}`])
     : (team2Score.innerText = teamScore[`komanda${team}`]);
 
-  let p = document.createElement("p");
-  p.innerText = `Komanda ${team} pelnė ${value} ${
+  let message = document.createElement("p");
+  message.innerText = `Komanda ${team} pelnė ${value} ${
     value === 1 ? "tašką" : "taškus"
   } ${getTime()} viso taškų ${teamScore[`komanda${team}`]}`;
 
-  logContainer.appendChild(p);
+  populateLog(message);
 }
-
-const teamFouls = {
-  Komandos1žaidėjas1: 0,
-  Komandos1žaidėjas2: 0,
-  Komandos1žaidėjas3: 0,
-  Komandos2žaidėjas1: 0,
-  Komandos2žaidėjas2: 0,
-  Komandos2žaidėjas3: 0,
-};
-
-const teamScore = {
-  komanda1: 0,
-  komanda2: 0,
-};
 
 function init() {
   Object.keys(teamFouls).forEach((key) => {
@@ -99,16 +107,7 @@ if (newQuarterBtn.innerText === "Pradėti varžybas") {
   });
 }
 
-team1Players.forEach((player) => {
-  const foulButton = player.querySelector("button");
-  const playerFouled = foulButton.value;
-  const foulCounterHtml = player.querySelector("[data-player-fouls]");
-  foulButton.addEventListener("click", (_) => {
-    assignFoul(playerFouled, foulCounterHtml);
-  });
-});
-
-team2Players.forEach((player) => {
+teamPlayers.forEach((player) => {
   const foulButton = player.querySelector("button");
   const playerFouled = foulButton.value;
   const foulCounterHtml = player.querySelector("[data-player-fouls]");
@@ -135,24 +134,24 @@ newQuarterBtn.addEventListener("click", (_) => {
     document.querySelectorAll("button").forEach((button) => {
       button.disabled = false;
     });
-    let p = document.createElement("p");
-    p.innerText = `Varžybos prasideda! ${getTime()}`;
-    logContainer.appendChild(p);
+    let message = document.createElement("p");
+    message.innerText = `Varžybos prasideda! ${getTime()}`;
+    populateLog(message);
     newQuarterBtn.innerText = "Baigti kėlinį";
     currentQuarter++;
     quarter.innerText = currentQuarter;
   } else if (currentQuarter > 0 && currentQuarter < 4) {
-    let p = document.createElement("p");
-    p.innerText = `Kėlinys ${currentQuarter} baigtas ${getTime()}`;
-    logContainer.appendChild(p);
+    let message = document.createElement("p");
+    message.innerText = `Kėlinys ${currentQuarter} baigtas ${getTime()}`;
+    populateLog(message);
     currentQuarter++;
     quarter.innerText = currentQuarter;
     newQuarterBtn.innerText = "Baigti varžybas";
   } else if (currentQuarter === 4) {
     newQuarterBtn.disabled = true;
-    let p = document.createElement("p");
-    p.innerText = `Varžybos baigtos ${getTime()}`;
-    logContainer.appendChild(p);
+    let message = document.createElement("p");
+    message.innerText = `Varžybos baigtos ${getTime()}`;
+    populateLog(message);
     quarter.innerText = currentQuarter;
   }
 });
