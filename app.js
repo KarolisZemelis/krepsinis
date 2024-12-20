@@ -1,10 +1,6 @@
-const teamFouls = {
-  Komandos1žaidėjas1: 0,
-  Komandos1žaidėjas2: 0,
-  Komandos1žaidėjas3: 0,
-  Komandos2žaidėjas1: 0,
-  Komandos2žaidėjas2: 0,
-  Komandos2žaidėjas3: 0,
+const players = {
+  team1: {},
+  team2: {},
 };
 
 const teamScore = {
@@ -15,6 +11,7 @@ const teamScore = {
 let eventLog = [];
 
 const teamPlayers = document.querySelectorAll("[data-team-player-container]");
+const playerNames = document.querySelectorAll("input");
 
 const team1ScoreBtns = document.querySelectorAll(
   "[data-points1-container] button"
@@ -35,11 +32,54 @@ const fouls = document.querySelectorAll("[data-player-fouls]");
 let logContainer = document.querySelector("[data-score]");
 let currentQuarter;
 
-function populateLog(message) {
-  eventLog.push(message);
-  eventLog.forEach((event) => {
-    logContainer.appendChild(event);
+function generatePlayers() {
+  teamPlayers.forEach((player) => {
+    const inputField = player.querySelector("input");
+    let inputFieldValue = inputField.value.trim(); // Ensure no leading/trailing spaces
+    const changeNameBtn = player.querySelector("[data-change-name]");
+    let team = inputField.id;
+    // Ensure the players object has initial values if not already present
+
+    players[team][inputFieldValue] = 0;
+    // console.log(players[team]);
+    function hasKey(obj, key) {
+      return key in obj && obj[key] !== undefined;
+    }
+    console.log("isoreje", players["team1"]);
+    // Event listener for changing player names
+    changeNameBtn.addEventListener("click", (_) => {
+      const playerToChange = inputFieldValue; // Store current name
+      const newName = inputField.value.trim(); // New name from input field
+      console.log("evente", players["team1"]);
+      if (playerToChange !== newName && !hasKey(newName in players[team])) {
+        // Transfer value from old key to new key
+        players[team][newName] = players[team][playerToChange];
+        // Delete the old key after transferring the value
+        delete players[team][playerToChange];
+      } else {
+        console.log("Invalid name change or name already exists.");
+      }
+
+      console.log(players); // Log the players object
+    });
   });
+  console.log(players);
+}
+
+function populateLog(message) {
+  // Add the new message to the log
+  eventLog.push(message);
+
+  // Clear the container before rendering
+  logContainer.innerHTML = "";
+
+  // Iterate through the log in reverse order and append elements
+  eventLog
+    .slice()
+    .reverse()
+    .forEach((event) => {
+      logContainer.appendChild(event);
+    });
 }
 
 function getTime() {
@@ -55,8 +95,8 @@ function getTime() {
 
 function assignFoul(player, foulHtml) {
   let playerKey = player.replace(/\s+/g, "");
-  teamFouls[playerKey]++;
-  foulHtml.innerText = teamFouls[playerKey];
+  players[playerKey]++;
+  foulHtml.innerText = players[playerKey];
 
   let message = document.createElement("p");
   message.innerText = `${player} gavo pražangą ${getTime()}`;
@@ -79,8 +119,9 @@ function adjustTeamScore(team, value) {
 }
 
 function init() {
-  Object.keys(teamFouls).forEach((key) => {
-    teamFouls[key] = 0;
+  generatePlayers();
+  Object.keys(players).forEach((key) => {
+    players[key] = 0;
   });
   Object.keys(teamScore).forEach((key) => {
     teamScore[key] = 0;
@@ -95,17 +136,16 @@ function init() {
   newQuarterBtn.innerText = "Pradėti varžybas";
   newQuarterBtn.disabled = false;
   quarter.innerText = currentQuarter;
+  if (newQuarterBtn.innerText === "Pradėti varžybas") {
+    document.querySelectorAll("button").forEach((button) => {
+      if (button !== newQuarterBtn) {
+        button.disabled = true; // Disable all buttons except newQuarterBtn
+      }
+    });
+  }
 }
 
 init();
-
-if (newQuarterBtn.innerText === "Pradėti varžybas") {
-  document.querySelectorAll("button").forEach((button) => {
-    if (button !== newQuarterBtn) {
-      button.disabled = true; // Disable all buttons except newQuarterBtn
-    }
-  });
-}
 
 teamPlayers.forEach((player) => {
   const foulButton = player.querySelector("button");
