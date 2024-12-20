@@ -14,7 +14,9 @@ const newGame = document.querySelector("[data-new-game]");
 const team1Score = document.querySelector("[data-team1-score]");
 const team2Score = document.querySelector("[data-team2-score]");
 
-let logContainer = document.querySelector("[data-log-container]");
+const fouls = document.querySelectorAll("[data-player-fouls]");
+
+let logContainer = document.querySelector("[data-score]");
 let currentQuarter = 0;
 
 function getTime() {
@@ -53,8 +55,6 @@ function adjustTeamScore(team, value) {
   logContainer.appendChild(p);
 }
 
-function newQuarter() {}
-
 const teamFouls = {
   Komandos1žaidėjas1: 0,
   Komandos1žaidėjas2: 0,
@@ -68,6 +68,31 @@ const teamScore = {
   komanda1: 0,
   komanda2: 0,
 };
+
+function init() {
+  Object.keys(teamFouls).forEach((key) => {
+    teamFouls[key] = 0;
+  });
+  Object.keys(teamScore).forEach((key) => {
+    teamScore[key] = 0;
+  });
+  team1Score.innerText = 0;
+  team2Score.innerText = 0;
+  fouls.forEach((foul) => {
+    foul.innerText = 0;
+  });
+  logContainer.innerHTML = "";
+}
+
+init();
+
+if (newQuarterBtn.innerText === "Pradėti varžybas") {
+  document.querySelectorAll("button").forEach((button) => {
+    if (button !== newQuarterBtn) {
+      button.disabled = true; // Disable all buttons except newQuarterBtn
+    }
+  });
+}
 
 team1Players.forEach((player) => {
   const foulButton = player.querySelector("button");
@@ -103,6 +128,9 @@ newQuarterBtn.addEventListener("click", (_) => {
   console.log(currentQuarter);
   if (currentQuarter === 0) {
     newQuarterBtn.innerText = "Baigti kėlinį";
+    document.querySelectorAll("button").forEach((button) => {
+      button.disabled = false;
+    });
     let p = document.createElement("p");
     p.innerText = `Varžybos prasideda! ${getTime()}`;
     logContainer.appendChild(p);
@@ -118,4 +146,8 @@ newQuarterBtn.addEventListener("click", (_) => {
     p.innerText = `Varžybos baigtos ${getTime()}`;
     logContainer.appendChild(p);
   }
+});
+
+newGame.addEventListener("click", (_) => {
+  init();
 });
