@@ -12,7 +12,6 @@
     <div class="teamsContainer">
       <div data-team1-container>
         <h3>Komanda 1</h3>
-        <h4>Score: <span data-team1-score>0</span></h4>
         <div class="playerContainer" data-team1-player-container>
           <input type="text" placeholder="Žaidėjas 1" />
           <div data-player-fouls-container>
@@ -48,7 +47,6 @@
       </div>
       <div data-team2-container>
         <h3>Komanda 2</h3>
-        <h4>Score: <span data-team2-score>0</span></h4>
         <div class="playerContainer" data-team2-player-container>
           <input type="text" placeholder="Žaidėjas 1" />
           <div data-player-fouls-container>
@@ -83,11 +81,25 @@
         </div>
       </div>
     </div>
+    <div class="court-container">
+      <div class="half-court-line"></div>
+      <div class="center-circle"></div>
+      <div class="hoop left"></div>
+      <div class="hoop right"></div>
+      <div class="team-score team1-score">
+        Team1 :
+        <span data-team1-score></span>
+      </div>
+      <div class="team-score team2-score">
+        Team2 :
+        <span data-team2-score></span>
+      </div>
+    </div>
     <div data-log-container>
       <h4>Įrašai:</h4>
       <div data-score></div>
       <div class="logButtonContainer">
-        <button data-new-quarter>Baigti kėlinį</button>
+        <button data-new-quarter>Pradėti varžybas</button>
         <button data-new-game>Pradėti iš naujo</button>
       </div>
     </div>

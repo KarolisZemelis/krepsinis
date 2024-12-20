@@ -1,17 +1,21 @@
 const team1Players = document.querySelectorAll("[data-team1-player-container]");
 const team2Players = document.querySelectorAll("[data-team2-player-container]");
+
 const team1ScoreBtns = document.querySelectorAll(
   "[data-points1-container] button"
 );
 const team2ScoreBtns = document.querySelectorAll(
   "[data-points2-container] button"
 );
-const newQuarterBtn = document.querySelectorAll("[data-new-quarter]");
-const newGame = document.querySelectorAll("[data-new-game]");
+
+const newQuarterBtn = document.querySelector("[data-new-quarter]");
+const newGame = document.querySelector("[data-new-game]");
+
 const team1Score = document.querySelector("[data-team1-score]");
 const team2Score = document.querySelector("[data-team2-score]");
+
 let logContainer = document.querySelector("[data-log-container]");
-let currentQuarter;
+let currentQuarter = 0;
 
 function getTime() {
   const now = new Date(); // Create a new Date object for the current time
@@ -95,8 +99,23 @@ team2ScoreBtns.forEach((button) => {
   });
 });
 
-// newQuarterBtn.addEventListener("click", (_) => {
-//   currentQuarter === 4
-//     ? (newQuarterBtn.innerText = "Baigti varžybas")
-//     : currentQuarter++;
-// });
+newQuarterBtn.addEventListener("click", (_) => {
+  console.log(currentQuarter);
+  if (currentQuarter === 0) {
+    newQuarterBtn.innerText = "Baigti kėlinį";
+    let p = document.createElement("p");
+    p.innerText = `Varžybos prasideda! ${getTime()}`;
+    logContainer.appendChild(p);
+    currentQuarter++;
+  } else if (currentQuarter > 0 && currentQuarter < 4) {
+    let p = document.createElement("p");
+    p.innerText = `Kėlinys ${currentQuarter} baigtas ${getTime()}`;
+    logContainer.appendChild(p);
+    currentQuarter++;
+  } else if (currentQuarter === 4) {
+    newQuarterBtn.innerText = "Baigti varžybas";
+    let p = document.createElement("p");
+    p.innerText = `Varžybos baigtos ${getTime()}`;
+    logContainer.appendChild(p);
+  }
+});
