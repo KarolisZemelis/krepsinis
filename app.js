@@ -1,6 +1,10 @@
 const players = {
-  team1: {},
-  team2: {},
+  Komandos1žaidėjas1: 0,
+  Komandos1žaidėjas2: 0,
+  Komandos1žaidėjas3: 0,
+  Komandos2žaidėjas1: 0,
+  Komandos2žaidėjas2: 0,
+  Komandos2žaidėjas3: 0,
 };
 
 const teamScore = {
@@ -32,39 +36,40 @@ const fouls = document.querySelectorAll("[data-player-fouls]");
 let logContainer = document.querySelector("[data-score]");
 let currentQuarter;
 
-function generatePlayers() {
-  teamPlayers.forEach((player) => {
-    const inputField = player.querySelector("input");
-    let inputFieldValue = inputField.value.trim(); // Ensure no leading/trailing spaces
-    const changeNameBtn = player.querySelector("[data-change-name]");
-    let team = inputField.id;
-    // Ensure the players object has initial values if not already present
+// function generatePlayers() {
+//   teamPlayers.forEach((player) => {
+//     const inputField = player.querySelector("input");
+//     let inputFieldValue = inputField.value.trim(); // Ensure no leading/trailing spaces
+//     const changeNameBtn = player.querySelector("[data-change-name]");
+//     let team = inputField.id;
+//     // Ensure the players object has initial values if not already present
 
-    players[team][inputFieldValue] = 0;
-    // console.log(players[team]);
-    function hasKey(obj, key) {
-      return key in obj && obj[key] !== undefined;
-    }
-    console.log("isoreje", players["team1"]);
-    // Event listener for changing player names
-    changeNameBtn.addEventListener("click", (_) => {
-      const playerToChange = inputFieldValue; // Store current name
-      const newName = inputField.value.trim(); // New name from input field
-      console.log("evente", players["team1"]);
-      if (playerToChange !== newName && !hasKey(newName in players[team])) {
-        // Transfer value from old key to new key
-        players[team][newName] = players[team][playerToChange];
-        // Delete the old key after transferring the value
-        delete players[team][playerToChange];
-      } else {
-        console.log("Invalid name change or name already exists.");
-      }
+//     players[team][inputFieldValue] = 0;
+//     // console.log(players[team]);
+//     function hasKey(obj, key) {
+//       return key in obj && obj[key] !== undefined;
+//     }
 
-      console.log(players); // Log the players object
-    });
-  });
-  console.log(players);
-}
+//     // Event listener for changing player names
+//     changeNameBtn.addEventListener("click", (_) => {
+//       console.log("evente team", team);
+//       const playerToChange = inputFieldValue; // Store current name
+//       const newName = inputField.value.trim(); // New name from input field
+//       console.log("fiiiiiig", players["team1"]);
+//       if (playerToChange !== newName && !hasKey(newName in players[team])) {
+//         // Transfer value from old key to new key
+//         players[team][newName] = players[team][playerToChange];
+//         // Delete the old key after transferring the value
+//         delete players[team][playerToChange];
+//       } else {
+//         console.log("Invalid name change or name already exists.");
+//       }
+
+//       console.log(players); // Log the players object
+//     });
+//   });
+//   console.log(players);
+// }
 
 function populateLog(message) {
   // Add the new message to the log
@@ -119,7 +124,6 @@ function adjustTeamScore(team, value) {
 }
 
 function init() {
-  generatePlayers();
   Object.keys(players).forEach((key) => {
     players[key] = 0;
   });
@@ -146,19 +150,20 @@ function init() {
 }
 
 init();
-
+console.log(teamPlayers);
 teamPlayers.forEach((player) => {
   const foulButton = player.querySelector("button");
+  console.log(foulButton);
   const playerFouled = foulButton.value;
   const foulCounterHtml = player.querySelector("[data-player-fouls]");
   foulButton.addEventListener("click", (_) => {
+    console.log("spaudziam");
     assignFoul(playerFouled, foulCounterHtml);
   });
 });
 
 team1ScoreBtns.forEach((button) => {
   button.addEventListener("click", (_) => {
-    console.log("testas");
     adjustTeamScore(1, parseInt(button.value));
   });
 });
