@@ -126,10 +126,10 @@ function init() {
     document.querySelectorAll("button").forEach((button) => {
       if (button !== newQuarterBtn) {
         button.disabled = true; // Disable all buttons except newQuarterBtn
+        newGame.disabled = false;
       }
     });
   }
-  console.log(players);
 }
 
 init();
@@ -186,8 +186,20 @@ team2ScoreBtns.forEach((button) => {
 
 newQuarterBtn.addEventListener("click", (_) => {
   if (currentQuarter === 0) {
+    const video = document.querySelector("video");
+
+    const playFromTime = (startTime) => {
+      video.currentTime = startTime; // Set the starting time
+      video.play(); // Play the video from that time
+    };
+    video.style.display = "block"; // Show the video
+    playFromTime(46);
+
+    video.addEventListener("ended", () => {
+      video.style.display = "none"; // Hide the video again
+    });
     document.querySelectorAll("button").forEach((button) => {
-      button.disabled = false;
+      button.display = true;
     });
     let message = document.createElement("p");
     message.innerText = `Varžybos prasideda! ${getTime()}`;

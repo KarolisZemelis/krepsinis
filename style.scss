@@ -1,7 +1,16 @@
 $primary-color: #ffa500; // Basketball orange color
 $secondary-color: #333; // Dark background for scoreboard
 body {
+  video {
+    position: absolute;
+    width: 100%; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    object-fit: cover;
+    z-index: 3;
+    display: none;
+  }
   background-image: url(images/basketballCourt.jpg);
+  object-fit: cover;
   font-family: "Urbanist", sans-serif;
   position: relative;
   display: flex;
