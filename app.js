@@ -38,23 +38,6 @@ function getPlayerDetails(player) {
   const inputClass = inputElement.className; //team
   return [inputValue, inputClass];
 }
-//****************************NEVEIKIA********************************** */
-teamPlayers.forEach((player) => {
-  let button = player.querySelector("button");
-  const oldName = button.value;
-  const team = getPlayerDetails(player)[1];
-  const input = player.querySelector("input");
-  input.addEventListener("blur", function (event) {
-    const newName = event.target.value.trim();
-    if (newName !== oldName) {
-      if (players[team][oldName] !== undefined) {
-        players[team][newName] = players[team][oldName]; // Copy the value
-        delete players[team][oldName];
-        console.log(players);
-      }
-    }
-  });
-});
 
 function generatePlayers() {
   teamPlayers.forEach((player) => {
@@ -139,18 +122,41 @@ function init() {
       }
     });
   }
+  console.log(players);
 }
 
 init();
 
 teamPlayers.forEach((player) => {
-  getPlayerDetails(player);
+  const button = player.querySelector("button");
+  const oldName = button.value;
+  console.log(oldName);
   const team = getPlayerDetails(player)[1];
+  const input = player.querySelector("input");
+  let newName = "";
+
+  input.addEventListener("blur", function (event) {
+    newName = event.target.value.trim();
+    // Delay to ensure internal value updates are complete
+    setTimeout(() => {
+      input.value = newName;
+      input.setAttribute("value", newName); // Enforce update
+      if (newName !== oldName) {
+        if (players[team][oldName] !== undefined) {
+          players[team][newName] = players[team][oldName]; // Copy the value
+          delete players[team][oldName];
+        }
+      }
+    }, 0);
+  });
   const foulButton = player.querySelector("button");
-  const playerFouled = getPlayerDetails(player)[0];
   const foulCounterHtml = player.querySelector("[data-player-fouls]");
   foulButton.addEventListener("click", (_) => {
-    assignFoul(playerFouled, team, foulCounterHtml);
+    console.log("new", newName);
+    console.log("old", oldName);
+    newName.length === 0
+      ? assignFoul(oldName, team, foulCounterHtml)
+      : assignFoul(newName, team, foulCounterHtml);
   });
 });
 
