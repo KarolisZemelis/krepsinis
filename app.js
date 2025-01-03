@@ -1,10 +1,6 @@
 const players = {
-  Komandos1žaidėjas1: 0,
-  Komandos1žaidėjas2: 0,
-  Komandos1žaidėjas3: 0,
-  Komandos2žaidėjas1: 0,
-  Komandos2žaidėjas2: 0,
-  Komandos2žaidėjas3: 0,
+  teamOne: {},
+  teamTwo: {},
 };
 
 const teamScore = {
@@ -36,40 +32,37 @@ const fouls = document.querySelectorAll("[data-player-fouls]");
 let logContainer = document.querySelector("[data-score]");
 let currentQuarter;
 
-// function generatePlayers() {
-//   teamPlayers.forEach((player) => {
-//     const inputField = player.querySelector("input");
-//     let inputFieldValue = inputField.value.trim(); // Ensure no leading/trailing spaces
-//     const changeNameBtn = player.querySelector("[data-change-name]");
-//     let team = inputField.id;
-//     // Ensure the players object has initial values if not already present
+function getPlayerDetails(player) {
+  let inputElement = player.querySelector("input");
+  const inputValue = inputElement.value; //player name
+  const inputClass = inputElement.className; //team
+  return [inputValue, inputClass];
+}
+//****************************NEVEIKIA********************************** */
+teamPlayers.forEach((player) => {
+  let button = player.querySelector("button");
+  const oldName = button.value;
+  const team = getPlayerDetails(player)[1];
+  const input = player.querySelector("input");
+  input.addEventListener("blur", function (event) {
+    const newName = event.target.value.trim();
+    if (newName !== oldName) {
+      if (players[team][oldName] !== undefined) {
+        players[team][newName] = players[team][oldName]; // Copy the value
+        delete players[team][oldName];
+        console.log(players);
+      }
+    }
+  });
+});
 
-//     players[team][inputFieldValue] = 0;
-//     // console.log(players[team]);
-//     function hasKey(obj, key) {
-//       return key in obj && obj[key] !== undefined;
-//     }
-
-//     // Event listener for changing player names
-//     changeNameBtn.addEventListener("click", (_) => {
-//       console.log("evente team", team);
-//       const playerToChange = inputFieldValue; // Store current name
-//       const newName = inputField.value.trim(); // New name from input field
-//       console.log("fiiiiiig", players["team1"]);
-//       if (playerToChange !== newName && !hasKey(newName in players[team])) {
-//         // Transfer value from old key to new key
-//         players[team][newName] = players[team][playerToChange];
-//         // Delete the old key after transferring the value
-//         delete players[team][playerToChange];
-//       } else {
-//         console.log("Invalid name change or name already exists.");
-//       }
-
-//       console.log(players); // Log the players object
-//     });
-//   });
-//   console.log(players);
-// }
+function generatePlayers() {
+  teamPlayers.forEach((player) => {
+    getPlayerDetails(player)[1] === "teamOne"
+      ? (players.teamOne[getPlayerDetails(player)[0]] = 0)
+      : (players.teamTwo[getPlayerDetails(player)[0]] = 0);
+  });
+}
 
 function populateLog(message) {
   // Add the new message to the log
@@ -98,13 +91,13 @@ function getTime() {
   return formattedTime;
 }
 
-function assignFoul(player, foulHtml) {
-  let playerKey = player.replace(/\s+/g, "");
-  players[playerKey]++;
-  foulHtml.innerText = players[playerKey];
-
+function assignFoul(player, team, foulHtml) {
+  players[team][player]++;
+  foulHtml.innerText = players[team][player];
   let message = document.createElement("p");
-  message.innerText = `${player} gavo pražangą ${getTime()}`;
+  team === "teamOne"
+    ? (message.innerText = `${player} iš pirmos komandos gavo pražangą ${getTime()}`)
+    : (message.innerText = `${player} iš antros komandos gavo pražangą ${getTime()}`);
 
   populateLog(message);
 }
@@ -124,9 +117,6 @@ function adjustTeamScore(team, value) {
 }
 
 function init() {
-  Object.keys(players).forEach((key) => {
-    players[key] = 0;
-  });
   Object.keys(teamScore).forEach((key) => {
     teamScore[key] = 0;
   });
@@ -136,6 +126,8 @@ function init() {
     foul.innerText = 0;
   });
   logContainer.innerHTML = "";
+  eventLog = [];
+  generatePlayers();
   currentQuarter = 0;
   newQuarterBtn.innerText = "Pradėti varžybas";
   newQuarterBtn.disabled = false;
@@ -150,15 +142,15 @@ function init() {
 }
 
 init();
-console.log(teamPlayers);
+
 teamPlayers.forEach((player) => {
+  getPlayerDetails(player);
+  const team = getPlayerDetails(player)[1];
   const foulButton = player.querySelector("button");
-  console.log(foulButton);
-  const playerFouled = foulButton.value;
+  const playerFouled = getPlayerDetails(player)[0];
   const foulCounterHtml = player.querySelector("[data-player-fouls]");
   foulButton.addEventListener("click", (_) => {
-    console.log("spaudziam");
-    assignFoul(playerFouled, foulCounterHtml);
+    assignFoul(playerFouled, team, foulCounterHtml);
   });
 });
 
