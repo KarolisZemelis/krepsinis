@@ -85,6 +85,13 @@ function assignFoul(player, team, foulHtml) {
   populateLog(message);
 }
 
+function kickPlayer(foulButton, foulCount) {
+  if (foulCount === 4) {
+    foulButton.disabled = true;
+    foulButton.style.backgroundColor = "gray";
+  }
+}
+
 function adjustTeamScore(team, value) {
   teamScore[`komanda${team}`] += value;
   team === 1
@@ -151,12 +158,17 @@ teamPlayers.forEach((player) => {
   });
   const foulButton = player.querySelector("button");
   const foulCounterHtml = player.querySelector("[data-player-fouls]");
+  let foulCount = "";
   foulButton.addEventListener("click", (_) => {
-    console.log("new", newName);
-    console.log("old", oldName);
-    newName.length === 0
-      ? assignFoul(oldName, team, foulCounterHtml)
-      : assignFoul(newName, team, foulCounterHtml);
+    if (newName.length === 0) {
+      assignFoul(oldName, team, foulCounterHtml);
+      foulCount = players[team][oldName];
+      kickPlayer(foulButton, foulCount);
+    } else {
+      assignFoul(newName, team, foulCounterHtml);
+      foulCount = players[team][newName];
+      kickPlayer(foulButton, foulCount);
+    }
   });
 });
 
