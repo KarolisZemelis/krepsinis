@@ -126,7 +126,7 @@ function init() {
     document.querySelectorAll("button").forEach((button) => {
       if (button !== newQuarterBtn) {
         button.disabled = true; // Disable all buttons except newQuarterBtn
-        newGame.disabled = false;
+        button.style.display = "none";
       }
     });
   }
@@ -185,16 +185,28 @@ team2ScoreBtns.forEach((button) => {
 });
 
 newQuarterBtn.addEventListener("click", (_) => {
+  document.querySelectorAll("button").forEach((button) => {
+    if (button !== newQuarterBtn) {
+      if (currentQuarter < 4) {
+        button.disabled = false;
+        button.style.display = "block";
+      } else {
+        button.disabled = true;
+        button.style.display = "none";
+        newGame.disabled = false;
+        newGame.style.display = "block";
+      }
+    }
+  });
   if (currentQuarter === 0) {
     const video = document.querySelector("video");
-
     const playFromTime = (startTime) => {
       video.currentTime = startTime; // Set the starting time
       video.play(); // Play the video from that time
     };
     video.style.display = "block"; // Show the video
     playFromTime(46);
-
+    video.play();
     video.addEventListener("ended", () => {
       video.style.display = "none"; // Hide the video again
     });
@@ -213,7 +225,7 @@ newQuarterBtn.addEventListener("click", (_) => {
     populateLog(message);
     currentQuarter++;
     quarter.innerText = currentQuarter;
-    newQuarterBtn.innerText = "Baigti varžybas";
+    newQuarterBtn.innerText = "Baigti kėlinį";
   } else if (currentQuarter === 4) {
     newQuarterBtn.disabled = true;
     let message = document.createElement("p");
@@ -221,6 +233,8 @@ newQuarterBtn.addEventListener("click", (_) => {
     populateLog(message);
     alert(`Varžybos baigtos ${getTime()}!`);
     quarter.innerText = currentQuarter;
+    newQuarterBtn.innerText = "Varžybos baigtos";
+    newQuarterBtn.disabled = "true";
   }
 });
 
