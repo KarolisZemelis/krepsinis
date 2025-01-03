@@ -207,6 +207,7 @@ newQuarterBtn.addEventListener("click", (_) => {
     let message = document.createElement("p");
     message.innerText = `Varžybos baigtos ${getTime()}`;
     populateLog(message);
+    alert(`Varžybos baigtos ${getTime()}!`);
     quarter.innerText = currentQuarter;
   }
 });
